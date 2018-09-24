@@ -11,16 +11,17 @@ namespace StructureMapIoC
     {
         static void Main(string[] args)
         {
-            //var container = new Container();
-            var container = new Container();// x => x.For<ICreditCard>().Use<MasterCard>().Named("mastercard"));
+            // default lifecycle is Transient, here we are overriding as Singleton
+            var container = new Container(x => x.For<ICreditCard>().Singleton().Use<MasterCard>().Named("mastercard"));
 
-            //container.Configure(x => x.For<ICreditCard>().Use<Visa>().Named("visa"));
+            var shopper = container.GetInstance<Shopper>();
+            shopper.Charge();
+            Console.WriteLine(shopper.ChargesForCurrentCard);
 
-            var creditCard = container.TryGetInstance<ICreditCard>();
+            var shopper2 = container.GetInstance<Shopper>();
+            shopper2.Charge();
+            Console.WriteLine(shopper2.ChargesForCurrentCard);
 
-            if (creditCard == null) throw new Exception("Could not get ICreditCard");
-
-            creditCard.Charge();
             Console.Read();
         }
 
