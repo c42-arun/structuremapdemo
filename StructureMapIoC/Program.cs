@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StructureMap;
+using StructureMap.Pipeline;
 
 namespace StructureMapIoC
 {
@@ -12,7 +13,7 @@ namespace StructureMapIoC
         static void Main(string[] args)
         {
             // default lifecycle is Transient, here we are overriding as Singleton
-            var container = new Container(x => x.For<ICreditCard>().Singleton().Use<MasterCard>().Named("mastercard"));
+            var container = new Container(x => x.For<ICreditCard>().LifecycleIs(new ThreadLocalStorageLifecycle()).Use<MasterCard>().Named("mastercard"));
 
             var shopper = container.GetInstance<Shopper>();
             shopper.Charge();
