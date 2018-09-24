@@ -12,16 +12,20 @@ namespace StructureMapIoC
         static void Main(string[] args)
         {
             //var container = new Container();
-            var container = new Container(x => x.For<ICreditCard>().Use<MasterCard>());
+            var container = new Container(x => x.For<ICreditCard>().Use<MasterCard>().Named("mastercard"));
 
             //container.Configure(x => x.For<ICreditCard>().Use<MasterCard>());
             container.Configure(x => x.For<ICreditCard>().Use<Visa>().Named("visa"));
 
-            // Quirk: will resolve MasterCard even though we are askign by name!
-            // StructureMap always returns the type registered last!
-            var shopper = container.GetInstance<Shopper>();
+            //// Quirk: will resolve MasterCard even though we are registering Visa by name!
+            //// StructureMap always returns the type registered last!
+            //var shopper = container.GetInstance<Shopper>();
 
-            shopper.Charge();
+            // getting a named instance
+            var creditCard = container.GetInstance<ICreditCard>("mastercard");
+            Console.WriteLine(creditCard.Charge());
+
+            //shopper.Charge();
             Console.Read();
         }
 
