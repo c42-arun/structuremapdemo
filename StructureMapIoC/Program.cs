@@ -13,7 +13,7 @@ namespace StructureMapIoC
         static void Main(string[] args)
         {
             // default lifecycle is Transient, here we are overriding as Singleton
-            var container = new Container(x => x.For<ICreditCard>().LifecycleIs(new ThreadLocalStorageLifecycle()).Use<MasterCard>().Named("mastercard"));
+            var container = new Container(x => x.For<ICreditCard>().LifecycleIs(new UniquePerRequestLifecycle()).Use<MasterCard>().Named("mastercard"));
 
             var shopper = container.GetInstance<Shopper>();
             shopper.Charge();
@@ -22,6 +22,8 @@ namespace StructureMapIoC
             var shopper2 = container.GetInstance<Shopper>();
             shopper2.Charge();
             Console.WriteLine(shopper2.ChargesForCurrentCard);
+
+            Console.WriteLine(container.WhatDoIHave());
 
             Console.Read();
         }
